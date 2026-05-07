@@ -1,6 +1,3 @@
-using Hangfire;
-using Hangfire.PostgreSql;
-using Hangfire.InMemory;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -33,45 +30,15 @@ public static class DependencyInjection
         if (string.IsNullOrEmpty(connectionString))
         {
             Log.Information("Connection string não encontrada - usando InMemory Database (desenvolvimento local)");
-            
             services.AddDbContext<ApplicationDbContext>(options =>
-            {
-                options.UseInMemoryDatabase("SeuGerenteDevDb");
-            });
-            
-            // Hangfire com Memory Storage para desenvolvimento
-            services.AddHangfire(config =>
-            {
-                config.UseInMemoryStorage();
-            });
-            services.AddHangfireServer();
+                options.UseInMemoryDatabase("SeuGerenteDevDb"));
         }
         else
         {
             Log.Information("Configurando PostgreSQL via connection string");
-
-            // Converte URI format (postgres://user:pass@host/db) para key=value (Npgsql/Hangfire)
             var npgsqlConnStr = ConvertToNpgsqlFormat(connectionString);
-
             services.AddDbContext<ApplicationDbContext>(options =>
-            {
-                options.UseNpgsql(npgsqlConnStr, npgsqlOptions =>
-                {
-                    npgsqlOptions.EnableRetryOnFailure(maxRetryCount: 3);
-                });
-            });
-
-            var hangfireConnStr = StripUnsupportedParams(npgsqlConnStr);
-
-            services.AddHangfire(config =>
-            {
-                config.UsePostgreSqlStorage(options =>
-                {
-                    options.UseNpgsqlConnection(hangfireConnStr);
-                });
-            });
-
-            services.AddHangfireServer();
+                options.UseNpgsql(npgsqlConnStr, o => o.EnableRetryOnFailure(maxRetryCount: 3)));
         }
 
         // Repositórios
@@ -182,19 +149,4 @@ public static class DependencyInjection
         return sb.ToString();
     }
 
-    /// <summary>
-    /// Remove parâmetros não suportados pelo NpgsqlConnectionStringBuilder do Hangfire.
-    /// Use DOTNET_SYSTEM_NET_DISABLEIPV6=1 para forçar IPv4 globalmente no runtime.
-    /// </summary>
-    private static string StripUnsupportedParams(string connectionString)
-    {
-        var unsupported = new[] { "ip address preference", "prefer ipv4" };
-        var parts = connectionString.Split(';', StringSplitOptions.RemoveEmptyEntries);
-        var filtered = parts.Where(p =>
-        {
-            var key = p.Split('=')[0].Trim().ToLowerInvariant();
-            return !unsupported.Contains(key);
-        });
-        return string.Join(";", filtered);
-    }
 }

@@ -2,13 +2,11 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using DotNetEnv;
-using Hangfire;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using Serilog.Events;
-using SeuGerente.Api;
 using SeuGerente.Api.Middlewares;
 using SeuGerente.Application;
 using SeuGerente.Infrastructure;
@@ -171,7 +169,7 @@ try
     // Camadas da aplicação
     builder.Services.AddApplication();
     builder.Services.AddInfrastructure(builder.Configuration);
-    builder.Services.AddServiceLayer(); // Jobs em background
+    builder.Services.AddServiceLayer();
 
     // JWT Authentication
     var jwtSecretKey = GetConfigValue(builder.Configuration,
@@ -229,38 +227,6 @@ try
     
     app.UseAuthentication();
     app.UseAuthorization();
-
-    // Hangfire Dashboard e Jobs (apenas se configurado com banco de dados válido)
-    // Nota: GetConnectionString retorna "" (não null) quando o appsettings tem valor vazio,
-    // então não podemos usar ?? — usamos IsNullOrEmpty para encadear os fallbacks.
-    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-    if (string.IsNullOrEmpty(connectionString))
-        connectionString = builder.Configuration["DATABASE_URL"];
-    if (string.IsNullOrEmpty(connectionString))
-        connectionString = Environment.GetEnvironmentVariable("DATABASE_URL");
-
-    var isValidConnectionString = !string.IsNullOrEmpty(connectionString) &&
-                                  !connectionString.Contains("YOUR_SUPABASE_HOST") &&
-                                  !connectionString.Contains("YOUR_PASSWORD");
-    
-    if (isValidConnectionString)
-    {
-        var hangfireConfig = builder.Configuration.GetSection("Hangfire");
-        var dashboardPath = hangfireConfig["DashboardPath"] ?? "/hangfire";
-        
-        app.UseHangfireDashboard(dashboardPath, new Hangfire.DashboardOptions
-        {
-            Authorization = new[] { new HangfireAuthorizationFilter() }
-        });
-
-        // Configurar jobs recorrentes
-        SeuGerente.Service.HangfireJobsConfiguration.ConfigureJobs(builder.Configuration);
-        Log.Information("Hangfire Dashboard disponível em: {DashboardPath}", dashboardPath);
-    }
-    else
-    {
-        Log.Warning("Hangfire não configurado (connection string não definida)");
-    }
 
     app.MapControllers();
 
