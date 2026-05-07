@@ -36,10 +36,9 @@ RUN useradd -m -u 1001 -s /bin/bash appuser && \
 USER appuser
 
 # Environment variables
-ENV ASPNETCORE_ENVIRONMENT=Production \
-    ASPNETCORE_URLS=http://+:5001
+ENV ASPNETCORE_ENVIRONMENT=Production
 
-EXPOSE 5001
+EXPOSE 8080
 
 # Start the application
 CMD ["dotnet", "SeuGerente.Api.dll"]
