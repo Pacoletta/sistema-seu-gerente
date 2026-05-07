@@ -1,0 +1,59 @@
+# Build artifacts
+**/bin/
+**/obj/
+**/out/
+**/publish/
+
+# IDE and editor files
+**/.vs/
+**/.vscode/
+**/.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Test results
+**/TestResults/
+**/*.trx
+**/*.coverage
+
+# Environment and secrets
+**/.env
+**/.env.*
+!**/.env.example
+**/appsettings.*.json
+!**/appsettings.json
+!**/appsettings.Production.json
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Documentation
+**/*.md
+!README.md
+
+# Logs
+**/logs/
+**/*.log
+
+# Database
+**/*.db
+**/*.sqlite
+
+# Node modules (if any)
+**/node_modules/
+
+# OS files
+**/.DS_Store
+**/Thumbs.db
+
+# Scripts (keep only necessary ones)
+**/scripts/
+**/sql-scripts/
+
+# Tests
+**/tests/
+**/*.Tests/

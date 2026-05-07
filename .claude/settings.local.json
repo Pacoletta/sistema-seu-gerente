@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(xargs grep -l \"Hangfire\\\\|Npgsql\")",
+      "Bash(git add backend/src/SeuGerente.Infrastructure/SeuGerente.Infrastructure.csproj)",
+      "Bash(git commit:*)",
+      "Bash(git push origin main)",
+      "Bash(cat \"d:/Saas- Sistema Seu Gerente/frontend/src/app/\\(private\\)/despesas/page.tsx\")"
+    ]
+  }
+}

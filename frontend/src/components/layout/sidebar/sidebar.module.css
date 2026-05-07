@@ -1,0 +1,81 @@
+.sidebar {
+  width: 13rem;
+  min-width: 13rem;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  background: linear-gradient(to bottom, #0a1628, #0f172a, #1e293b);
+  border-right: 1px solid rgba(51, 65, 85, 0.5);
+  overflow: hidden;
+  z-index: 40;
+  will-change: width, min-width;
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.5);
+}
+
+.sidebar.collapsed {
+  width: 5rem;
+  min-width: 5rem;
+}
+
+/* ===== Expandindo: largura abre, depois labels aparecem ===== */
+.sidebar.animated {
+  transition:
+    width 350ms cubic-bezier(0.4, 0, 0.2, 1),
+    min-width 350ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.animated .label {
+  transition:
+    opacity 200ms ease 250ms,
+    max-width 200ms ease 250ms;
+}
+
+/* ===== Fechando: labels somem instantâneo, largura encolhe rápido ===== */
+.sidebar.animated.collapsed {
+  transition:
+    width 200ms cubic-bezier(0.4, 0, 1, 1),
+    min-width 200ms cubic-bezier(0.4, 0, 1, 1);
+}
+
+.animated.collapsed .label {
+  transition:
+    opacity 80ms ease,
+    max-width 80ms ease;
+}
+
+/* Labels */
+.label {
+  white-space: nowrap;
+  overflow: hidden;
+  opacity: 1;
+  max-width: 10rem;
+}
+
+.collapsed .label {
+  opacity: 0;
+  max-width: 0;
+}
+
+/* ===== Mobile: drawer deslizante ===== */
+@media (max-width: 1023px) {
+  .sidebar {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    height: 100% !important;
+    width: 280px !important;
+    min-width: 280px !important;
+    z-index: 50;
+    transform: translateX(-100%);
+    transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  .sidebar.mobileOpen {
+    transform: translateX(0);
+  }
+}

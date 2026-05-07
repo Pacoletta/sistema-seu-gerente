@@ -1,0 +1,105 @@
+# Dependências
+node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Build
+.next
+out
+dist
+build
+
+# Ambiente (não copiar para o build)
+.env*.local
+.env.development
+.env.test
+
+# Arquivos de desenvolvimento
+README.md
+DOCKER-README.md
+PROBLEMA_RESOLVIDO.md
+*.md
+
+# Git
+.git
+.gitignore
+.gitattributes
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# Capacitor/Mobile (não necessário no Docker)
+android
+ios
+capacitor.config.ts
+*.bat
+debug-*.js
+n8n-*.js
+
+# Docker
+Dockerfile*
+docker-compose*
+# NÃO ignorar docker-entrypoint.sh (necessário no build)
+# docker-entrypoint.sh
+
+# Tests
+**/*.test.ts
+**/*.test.tsx
+**/*.spec.ts
+**/*.spec.tsx
+coverage
+
+# Cache
+.cache
+.turbo
+*.log
+
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# IDEs e editores
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+*.pem
+
+# Testes
+coverage
+.nyc_output
+
+# Documentação (exceto README principal)
+*.md
+!README.md
+
+# Mobile (removido - projeto web-only)
+# android
+# ios
+
+# GitHub Actions
+.github
+
+# Backend
+backend
+
+# Scripts
+*.sh
+*.bat
