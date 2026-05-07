@@ -36,11 +36,10 @@ RUN useradd -m -u 1001 -s /bin/bash appuser && \
 USER appuser
 
 # Environment variables
-ENV ASPNETCORE_URLS=http://+:5000
 ENV ASPNETCORE_ENVIRONMENT=Production
 
-# Expose port
-EXPOSE 5000
+# EasyPanel injeta HTTP_PORTS=8080 automaticamente — não forçar porta aqui
+EXPOSE 8080
 
 # Start the application
 CMD ["dotnet", "SeuGerente.Api.dll"]
